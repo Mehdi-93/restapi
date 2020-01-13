@@ -2,3 +2,4 @@ Flask
 Flask-RESTful
 Flask_JWT
 Flask_SQLAlchemy
+Flask_jwt_extended
