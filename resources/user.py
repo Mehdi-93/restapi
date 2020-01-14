@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse
 from models.user import UserModel
 from werkzeug.security import safe_str_cmp
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_claims
 
 _user_parser = reqparse.RequestParser()
 _user_parser.add_argument('username',
@@ -43,7 +43,11 @@ class User(Resource):
 
 
 class UserList(Resource):
+    @jwt_required
     def get(self):
+        claims = get_jwt_claims()
+        if not claims['is_admin']:
+            return {'msg': 'Admin privilage need!'}
         return {'users': [user.json() for user in UserModel.find_all()]}
 
 class UserLogin(Resource):
